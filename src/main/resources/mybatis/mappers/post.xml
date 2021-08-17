@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="post">
+
+<insert id="writePost" parameterType="PostVo">
+<![CDATA[
+	INSERT INTO
+		post
+	VALUES
+		(
+			seq_post_no.NEXTVAL,
+			#{ cateNo },
+			#{ postTitle },
+			#{ postContent },
+			sysdate
+		)
+]]>
+</insert>
+
+
+<select id="getPost" parameterType="PostVo" resultType="PostVo">
+<![CDATA[
+	SELECT
+		postNo,
+		cateNo,
+		postTitle,
+		postContent,
+		regDate
+	FROM
+		post
+	WHERE
+		cateNo = #{ cateNo }
+		AND postNo = #{ postNo }
+]]>
+</select>
+
+
+
+<select id="postList" parameterType="int" resultType="PostVo">
+<![CDATA[
+	SELECT
+		postNo,
+		cateNo,
+		postTitle,
+		postContent,
+		regDate
+	FROM
+		post
+	WHERE
+		cateNo = #{ cateNo }
+]]>
+</select>
+
+
+</mapper>

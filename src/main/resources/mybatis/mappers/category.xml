@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="category">
+
+<!-- 회원가입 - 미분류 카테고리 -->
+<insert id="createDefaultCategory" parameterType="String">
+<![CDATA[
+	INSERT INTO
+		category
+	VALUES
+		(
+			seq_category_no.NEXTVAL,
+			#{ id },
+			'미분류',
+			'기본으로 생성되는 카테고리 입니다.',
+			sysdate
+		)
+]]>
+</insert>
+
+
+<!-- 
+<select id="cateNoList" parameterType="String" resultType="CategoryVo">
+<![CDATA[
+	SELECT
+	    cateNo
+	FROM
+	    category
+	WHERE
+	    id = #{ id }
+]]>
+</select>
+ -->
+
+
+<select id="categoryList" parameterType="String" resultType="CategoryVo">
+<![CDATA[
+	SELECT
+	   c.cateNo,
+	   c.cateName,
+	   pc.postCount,
+	   c.description
+	FROM
+	    category c,
+	    (
+	        SELECT
+	            COUNT(postNo) postCount
+	        FROM
+	            post p RIGHT OUTER JOIN category c
+	            ON p.cateNo = c.cateNo
+	        WHERE
+	            c.id = #{ id }
+	    ) pc
+	WHERE
+	    c.id = #{ id }
+	ORDER BY
+	    cateNo DESC
+]]>
+</select>
+
+
+<!-- insert후 시퀀스no 값 Vo에 set -->
+<insert id="addCategoryKey" parameterType="CategoryVo">
+	<selectKey keyProperty="cateNo" resultType="int" order="BEFORE">
+	<![CDATA[
+		SELECT
+			seq_category_no.NEXTVAL
+		FROM
+			dual
+	]]>
+	</selectKey>
+	<![CDATA[
+		INSERT INTO
+			category
+		VALUES
+			(
+				#{ cateNo },
+				#{ id },
+				#{ cateName },
+				#{ description },
+				sysdate
+			)
+	]]>
+</insert>
+
+
+
+
+<select id="addCategoryInfo" parameterType="CategoryVo" resultType="CategoryVo">
+<![CDATA[
+	SELECT
+	   c.cateNo,
+	   c.cateName,
+	   pc.postCount,
+	   c.id,
+	   c.description,
+	   c.regDate
+	FROM
+	    category c,
+	    (
+	        SELECT
+	            COUNT(postNo) postCount
+	        FROM
+	            post p RIGHT OUTER JOIN category c
+	            ON p.cateNo = c.cateNo
+	        WHERE
+	        	p.cateNo = #{ cateNo }
+	        	AND c.id = #{ id }
+	    ) pc
+	WHERE
+	    c.cateNo = #{ cateNo }
+]]>
+</select>
+
+
+<delete id="deleteCategory" parameterType="CategoryVo">
+<![CDATA[
+	DELETE FROM
+		category
+	WHERE
+		id = #{ id }
+		AND cateNo = #{ cateNo }
+]]>
+</delete>
+
+
+<!-- 포스트 작성시 카테고리 옵션 선택 리스트 -->
+<select id="cateOption" parameterType="String" resultType="CategoryVo">
+<![CDATA[
+	SELECT
+		cateNo,
+		cateName
+	FROM
+		category
+	WHERE
+		id = #{ id }
+]]>
+</select>
+
+</mapper>

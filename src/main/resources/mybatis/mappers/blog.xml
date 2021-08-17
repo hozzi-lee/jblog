@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="blog">
+
+	<!-- 회원가입시 id와 name으로 blog생성 -->
+	<insert id="createBlog" parameterType="UserVo">
+	<![CDATA[
+		INSERT INTO
+			blog
+		VALUES
+			(
+				#{ id },
+				#{ userName } || '의 블로그 입니다',
+				'spring-logo.jpg'
+			)
+	]]>
+	</insert>
+
+	
+	<!-- 블로그 정보 불러오기 -->
+	<select id="blogInfo" parameterType="String" resultType="BlogVo">
+	<![CDATA[
+		SELECT
+			b.id,
+			b.blogTitle,
+			b.logoFile,
+			u.userName
+		FROM
+			blog b,
+			users u
+		WHERE
+			u.id = #{ id }
+			AND b.id = #{ id }
+	]]>
+	</select>
+	
+	
+	<!-- 블로그 로고 이미지 변경 -->
+	<update id="uploadLogoFile" parameterType="BlogVo">
+	<![CDATA[
+		UPDATE
+			blog
+	]]>
+	
+	<choose>
+	<when test="logoFile == null">
+	<![CDATA[
+		SET
+			blogTitle = #{ blogTitle }
+	]]>
+	</when>
+	<otherwise>
+	<![CDATA[
+		SET
+			blogTitle = #{ blogTitle },
+			logoFile = #{ logoFile }
+	]]>
+	</otherwise>
+	</choose>
+	
+	<![CDATA[
+		WHERE
+			id = #{ id }
+	]]>
+	</update>
+	
+	
+</mapper>

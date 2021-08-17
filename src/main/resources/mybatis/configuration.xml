@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- 파라미터 null 값 해결 jdbctype={VARCHAR} -->
+	<!-- <settings> <setting name="cacheEnabled" value="false" /> <setting name="jdbcTypeForNull" value="NULL" /> </settings> -->
+
+	<typeAliases>
+		<typeAlias alias="UserVo" type="com.javaex.vo.UserVo" />
+		<typeAlias alias="BlogVo" type="com.javaex.vo.BlogVo" />
+		<typeAlias alias="CategoryVo" type="com.javaex.vo.CategoryVo" />
+		<typeAlias alias="PostVo" type="com.javaex.vo.PostVo" />
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="mybatis/mappers/user.xml" />
+		<mapper resource="mybatis/mappers/blog.xml" />
+		<mapper resource="mybatis/mappers/category.xml" />
+		<mapper resource="mybatis/mappers/post.xml" />
+	</mappers>
+</configuration>
